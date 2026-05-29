@@ -1,0 +1,26 @@
+
+using Bibilotec_MVC_DEV.Contexts;
+using Bibilotec_MVC_DEV.Interfaces;
+using Bibilotec_MVC_DEV.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Bibilotec_MVC_DEV.Repositories
+{
+    public class LivroRepository : ILivroRepository
+    {
+        private readonly BbDbContext _context;
+
+        public LivroRepository(BbDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Livro>> BuscarLivrosAsync()
+        {
+            return await _context.Livro
+             .Include(l => l.LivroCategorias)
+             .ThenInclude(lc => lc.Categoria)
+             .ToListAsync();
+        }
+    }
+}
